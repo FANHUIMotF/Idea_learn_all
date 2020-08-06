@@ -20,7 +20,7 @@ public interface CronTaskService {
     List<CronTaskEntity> findAll();
 
     /**
-     * 执行任务，执行成功则返回最新的cron
+     * 执行任务，返回最新的cron
      * @param className
      * @param job
      */

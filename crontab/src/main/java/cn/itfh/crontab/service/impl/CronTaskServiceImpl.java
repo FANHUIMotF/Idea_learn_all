@@ -64,34 +64,37 @@ public class CronTaskServiceImpl implements CronTaskService {
 //            return;
 //        }
         String lockName = "CronLock:" + calssName;
+        String cron = "";
         Jedis jedis = null;
         CronTaskEntity cronTaskEntity ;
         try {
+            //获取此定时任务的最新配置
+            cronTaskEntity = cronTaskDao.findByPriKey(calssName);
+            if (cronTaskEntity == null) {
+                log.error("未找到定时任务[className:" + calssName + "]");
+                return cron;
+            }
             jedis = JedisUtil.getJedis();
             //设置锁  锁的存活期为 2s
             String set = jedis.set(lockName, lockName, "nx", "px", 2000L);
             if (!JedisUtil.OK.equals(set)) {
                 log.info("当前线程未抢到执行权");
-                return "";
+                return cron;
             }
-            //获取此定时任务的最新配置
-            cronTaskEntity = cronTaskDao.findByPriKey(calssName);
-            if (cronTaskEntity == null) {
-                log.error("未找到定时任务[className:" + calssName + "]");
-                return "";
-            }
+
             //不启用的任务
             if (!Constant.Cron.IsUser_True.getKey().equals(cronTaskEntity.getIsUser())) {
                 log.info("此任务不启用，className:" + cronTaskEntity.getClassName());
                 //从定时注册器中删除此任务
                 configModifier.delTask(cronTaskEntity.getClassName());
-                return "";
+                return cron;
             }
-
+            //获取最新的cron
+            cron = cronTaskEntity.getCorn();
             //运行中的任务 不再执行
             if (Constant.Cron.Status_Running.equals(cronTaskEntity.getStatus())) {
                 log.info("此任务正在运行中，className:" + cronTaskEntity.getClassName());
-                return "";
+                return cron;
             }
 
             this.updateAndExcuteTask(cronTaskEntity, job);
@@ -105,7 +108,7 @@ public class CronTaskServiceImpl implements CronTaskService {
                 jedis.close();
             }
         }
-        return cronTaskEntity.getCorn();
+        return cron;
     }
 
     private void updateAndExcuteTask(CronTaskEntity cronTaskEntity){
@@ -167,7 +170,7 @@ public class CronTaskServiceImpl implements CronTaskService {
             throw new RuntimeException("Cron表达式错了！");
         }
         cronTaskDao.add(cronTaskEntity);
-        configModifier.addTaskInRunning(cronTaskEntity,new CronTaskRunnable(cronTaskEntity.getClassName(),configModifier.getNameCron()));
+        configModifier.addTaskInRunning(cronTaskEntity,new CronTaskRunnable(cronTaskEntity.getClassName(),cronTaskEntity.getCorn()));
     }
 
     @Override
@@ -215,7 +218,7 @@ public class CronTaskServiceImpl implements CronTaskService {
             throw new RuntimeException("此任务已处已启用");
         }
         cronTaskDao.updateIsUserByPriKey(className,Constant.Cron.IsUser_True.getKey());
-        configModifier.addTaskInRunning(byPriKey,new CronTaskRunnable(byPriKey.getClassName(),configModifier.getNameCron()));
+        configModifier.addTaskInRunning(byPriKey,new CronTaskRunnable(byPriKey.getClassName(),byPriKey.getCorn()));
     }
 
 

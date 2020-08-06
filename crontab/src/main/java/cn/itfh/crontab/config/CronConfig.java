@@ -17,7 +17,6 @@ import org.springframework.util.StringUtils;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 /***
  *  初始化 定时任务调度器 ；
@@ -36,11 +35,6 @@ public class CronConfig implements SchedulingConfigurer {
      * springboot默认创造的定时任务注册器
      */
     protected ScheduledTaskRegistrar scheduledTaskRegistrar;
-
-    /**
-     * 储存定时任务类名  -  对应的cron表达式
-     */
-    protected ConcurrentMap<String, String> nameCron = new ConcurrentHashMap<>(8);
     /**
      * 储存定时任务类名  -  对应的執行綫程
      */
@@ -106,8 +100,7 @@ public class CronConfig implements SchedulingConfigurer {
             log.error("定时任务执行类名为空");
             return;
         }
-        nameCron.put(cronTaskEntity.getClassName(), cronTaskEntity.getCorn());
-        Runnable runnable = new CronTaskRunnable(cronTaskEntity.getClassName(),nameCron);
+        CronTaskRunnable runnable = new CronTaskRunnable(cronTaskEntity.getClassName(),cronTaskEntity.getCorn());
 
         try {
             //  addCronTask方法 根据cron表达式在第一次加载时生成触发器  后期不可变
@@ -121,13 +114,12 @@ public class CronConfig implements SchedulingConfigurer {
                     //加入定时任务
                     runnable,
                     //每次执行此任务都会根据传入cron生成一个新的触发器
-                    triggerContext -> new CronTrigger(nameCron.get(cronTaskEntity.getClassName()))
+                    triggerContext -> new CronTrigger(runnable.getCron())
                             .nextExecutionTime(triggerContext)
             );
         } catch (Exception e) {
             log.error("项目启动时，注册器添加定时任务炸了，错误原因:", e);
-            //去除注册失败的定时任务，防止以后添加任务时误判重复
-            nameCron.remove(cronTaskEntity.getClassName());
+
         }
 
     }

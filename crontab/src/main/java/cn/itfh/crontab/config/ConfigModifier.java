@@ -8,8 +8,6 @@ import org.springframework.scheduling.config.CronTask;
 import org.springframework.scheduling.config.ScheduledTask;
 import org.springframework.stereotype.Component;
 
-import java.util.concurrent.ConcurrentMap;
-
 /***
  *  注册器修改类
  *  @className: ConfigModifier
@@ -25,9 +23,7 @@ public class ConfigModifier {
     @Qualifier("cronConfig")
     CronConfig cronConfig;
 
-    public ConcurrentMap<String, String> getNameCron() {
-        return cronConfig.nameCron;
-    }
+
     /**
      * 项目运行中，添加新的定时任务
      *
@@ -36,7 +32,6 @@ public class ConfigModifier {
     public void addTaskInRunning(CronTaskEntity cronTaskEntity, Runnable task) {
         //创建新的定时任务执行类,并将此任务加入调度器
         ScheduledTask scheduledTask = cronConfig.scheduledTaskRegistrar.scheduleCronTask(new CronTask(task, cronTaskEntity.getCorn()));
-        cronConfig.nameCron.put(cronTaskEntity.getClassName(), cronTaskEntity.getCorn());
         ScheduledTask oldScheduledTask = cronConfig.nameTask.get(cronTaskEntity.getClassName());
         //极端并发的情况下，有重复添加的风险
         if(oldScheduledTask != null){
