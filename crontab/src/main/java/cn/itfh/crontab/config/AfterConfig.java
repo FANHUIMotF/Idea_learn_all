@@ -34,6 +34,7 @@ public class AfterConfig implements CommandLineRunner {
             CronTaskRunnable runnable = (CronTaskRunnable) task.getRunnable();
             String className = runnable.getClassName();
             cronConfig.nameTask.put(className, next);
+
         }
     }
 }
