@@ -62,4 +62,11 @@ public interface CronTaskService {
      * @param className
      */
     void doNow(String className);
+
+    /**
+     * 修改任务执行状态
+     * @param className
+     * @param status
+     */
+    void updateStatus(String className,String status);
 }

@@ -15,7 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class Task2 implements Job{
     @Override
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
-    public void execute() {
-        System.out.println("任务2执行");
+    public void execute() throws InterruptedException {
+        System.out.println(Thread.currentThread().getName()+":任务2执行开始");
+//        Thread.sleep(10*1000);
+        System.out.println(Thread.currentThread().getName()+":任务2执行结束");
     }
 }

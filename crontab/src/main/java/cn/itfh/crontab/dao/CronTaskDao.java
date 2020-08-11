@@ -35,6 +35,13 @@ public interface CronTaskDao {
     })
     int updateEntity(@Param("cronTaskEntity") CronTaskEntity cronTaskEntity);
 
+    @Update({"<script>" +
+            "update crontask\n" +
+            " set  \n" +
+            "  Status = #{status} \n" +
+            " where className = #{className}\n" +
+            " </script>"})
+    void updateStatus(@Param("className") String className,@Param("status") String status);
     @Select({
             "<script>" +
                     "select * from crontask" +

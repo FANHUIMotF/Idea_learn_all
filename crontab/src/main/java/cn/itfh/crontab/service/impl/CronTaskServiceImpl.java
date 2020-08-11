@@ -75,7 +75,7 @@ public class CronTaskServiceImpl implements CronTaskService {
                 return cron;
             }
             jedis = JedisUtil.getJedis();
-            //设置锁  锁的存活期为 2s
+            //设置锁  锁的存活期要大于此任务的执行时间  否则锁无效
             String set = jedis.set(lockName, lockName, "nx", "px", 2000L);
             if (!JedisUtil.OK.equals(set)) {
                 log.info("当前线程未抢到执行权");
@@ -141,12 +141,17 @@ public class CronTaskServiceImpl implements CronTaskService {
         updateEntity.setNextTime(CronUtil.getNextExecuteTime(updateEntity.getCorn(), currentDate));
         //执行主要任务
         try {
+            //先将任务改为执行执行中
+            this.updateStatus(updateEntity.getClassName(),Constant.Cron.Status_Running.getKey());
             job.execute();
             result = Constant.Cron.Result_Success.getKey();
             resultDesc = Constant.Cron.Result_Success.getDisplayName();
         } catch (Exception e) {
             log.error("定时任务执行出错,className:" + cronTaskEntity.getClassName(), e);
             resultDesc = e.getMessage().substring(0, 256);
+        }finally {
+            //最后改为等待执行
+            this.updateStatus(updateEntity.getClassName(),Constant.Cron.Status_Wait.getKey());
         }
         updateEntity.setResult(result);
         updateEntity.setResultDesc(resultDesc);
@@ -233,5 +238,11 @@ public class CronTaskServiceImpl implements CronTaskService {
             throw new RuntimeException("此定时任务处于运行中状态");
         }
         this.updateAndExcuteTask(byPriKey);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.NOT_SUPPORTED)
+    public void updateStatus(String className, String status) {
+        cronTaskDao.updateStatus(className,status);
     }
 }
