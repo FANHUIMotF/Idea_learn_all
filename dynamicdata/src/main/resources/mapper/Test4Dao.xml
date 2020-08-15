@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.itfh.business.dao.Test4Dao">
+    <select id="findAll" resultType="cn.itfh.business.entity.Test4Entity">
+        select id,pd from test4
+    </select>
+    <select id="insert" parameterType="cn.itfh.business.entity.Test4Entity">
+        insert into test4(id,pd) values(#{entity.id},#{entity.pd})
+    </select>
+</mapper>

@@ -1,0 +1,53 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /dyna
+spring:
+  datasource:
+    db1:
+      type: com.alibaba.druid.pool.DruidDataSource
+      url: jdbc:mysql:///crontab?useUnicode=true&characterEncoding=utf-8
+      username: root
+      password: fanhui66
+      driver-class-name: com.mysql.jdbc.Driver
+      max-wait: 10000
+      min-idle: 8
+      initial-size: 10
+      max-active: 15
+      # 申请连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能。
+      test-on-borrow: true
+      # 建议配置为true，不影响性能，并且保证安全性。申请连接的时候检测，如果空闲时间大于timeBetweenEvictionRunsMillis，执行validationQuery检测连接是否有效
+      test-while-idle: true
+      #检测连接是否成功的sql
+      validation-query: SELECT 1 FROM DUAL
+      # 间隔多久进行一次检测，检查需要关闭的空闲连接，单位毫秒
+      time-between-eviction-runs-millis: 300000
+      # 配置一个连接在池中最小生存的时间，单位毫秒
+      min-evictable-idle-time-milli: 1800000
+    db2:
+      type: com.alibaba.druid.pool.DruidDataSource
+      url: jdbc:db2://localhost:50000/test
+      username: db2admin
+      password: fanhui66
+      driver-class-name: com.ibm.db2.jcc.DB2Driver
+      max-wait: 10000
+      min-idle: 8
+      initial-size: 10
+      max-active: 15
+      # 申请连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能。
+      test-on-borrow: true
+      # 建议配置为true，不影响性能，并且保证安全性。申请连接的时候检测，如果空闲时间大于timeBetweenEvictionRunsMillis，执行validationQuery检测连接是否有效
+      test-while-idle: true
+      #检测连接是否成功的sql
+      validation-query: SELECT count(*) from TEST1
+      # 间隔多久进行一次检测，检查需要关闭的空闲连接，单位毫秒
+      time-between-eviction-runs-millis: 300000
+      # 配置一个连接在池中最小生存的时间，单位毫秒
+      min-evictable-idle-time-milli: 1800000
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+logging:
+  level:
+    # 打印sql
+    cn.itfh.crontab.dao: debug
