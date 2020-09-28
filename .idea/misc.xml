@@ -8,7 +8,14 @@
       <list>
         <option value="$PROJECT_DIR$/springboot_quart/pom.xml" />
         <option value="$PROJECT_DIR$/crontab/pom.xml" />
+        <option value="$PROJECT_DIR$/dynamicdata/pom.xml" />
+        <option value="$PROJECT_DIR$/springcloudDemo1/pom.xml" />
       </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/springcloudDemo1/pom.xml" />
+      </set>
     </option>
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">

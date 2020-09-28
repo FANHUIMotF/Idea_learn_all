@@ -70,7 +70,7 @@ public class DataSourceConfig {
 
     @Bean("dynamicDataSource")
     @Primary
-    public DataSource dynamicDataSource(@Qualifier(DataSourceNames.DB1) DataSource db1,@Qualifier(DataSourceNames.DB2) DataSource db2) {
+    public DataSource dynamicDataSource(@Qualifier(DataSourceNames.DB1) DataSource db1, @Qualifier(DataSourceNames.DB2) DataSource db2) {
         Map<Object, Object> dataSourceMap = new HashMap<>(2);
         dataSourceMap.put(DataSourceNames.DB1, db1);
         dataSourceMap.put(DataSourceNames.DB2, db2);
@@ -85,7 +85,6 @@ public class DataSourceConfig {
     /**
      * 数据库连接会话工厂
      * 将动态数据源赋给工厂
-     * 默认bean存于com.main.example.bean包或子包下，也可直接在mapper中指定
      */
     @Bean(name = "sqlSessionFactory")
     @Primary
@@ -99,11 +98,13 @@ public class DataSourceConfig {
         return sqlSessionFactory;
     }
 
+    /**
+     * 事务管理
+     *
+     * @return 事务管理实例
+     */
     @Bean
-    @Primary
-    public PlatformTransactionManager transactionManager(@Qualifier("dynamicDataSource") DataSource dynamicDataSource) {
-        // 配置事务管理, 使用事务时在方法头部添加@Transactional注解即可
+    public PlatformTransactionManager platformTransactionManager(@Qualifier("dynamicDataSource") DataSource dynamicDataSource) {
         return new DataSourceTransactionManager(dynamicDataSource);
     }
-
 }

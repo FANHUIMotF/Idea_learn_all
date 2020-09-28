@@ -18,5 +18,5 @@ public interface CronTaskService {
      */
     List<CronTaskEntity> findAll();
 
-
+    void  addBatsh(List<CronTaskEntity> list);
 }

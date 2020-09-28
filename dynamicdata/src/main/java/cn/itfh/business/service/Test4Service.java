@@ -15,4 +15,6 @@ public interface Test4Service {
     List<Test4Entity> findAll();
 
     void insert(Test4Entity entity);
+
+    void batchInset(List<Test4Entity> list);
 }

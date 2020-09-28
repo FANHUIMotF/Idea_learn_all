@@ -50,4 +50,4 @@ mybatis:
 logging:
   level:
     # 打印sql
-    cn.itfh.crontab.dao: debug
+    cn.itfh.business.dao: debug

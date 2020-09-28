@@ -34,4 +34,15 @@ public class Test4ServiceImpl implements Test4Service {
     public void insert(Test4Entity entity) {
         test4Dao.insert(entity);
     }
+
+
+    @Override
+    @Transactional
+    @DB(value = DataSourceNames.DB2)
+    public void batchInset(List<Test4Entity> list) {
+        for (Test4Entity entity : list) {
+            test4Dao.insert(entity);
+            System.out.println("插入成功");
+        }
+    }
 }

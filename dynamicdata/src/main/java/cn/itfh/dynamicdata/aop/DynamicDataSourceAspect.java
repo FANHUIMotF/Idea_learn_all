@@ -1,8 +1,8 @@
 package cn.itfh.dynamicdata.aop;
 
 import cn.itfh.dynamicdata.annotation.DB;
-import cn.itfh.dynamicdata.datasource.DataSourceContext;
 import cn.itfh.dynamicdata.datasource.DataSourceNames;
+import cn.itfh.dynamicdata.datasource.DynamicDataSource;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -53,11 +53,11 @@ public class DynamicDataSourceAspect {
             //获取注解
             DB annotation = method.getAnnotation(DB.class);
             String value = annotation.value();
-            DataSourceContext.setDB(value);
+            DynamicDataSource.setDB(value);
         }
         //无此 注解 ，使用默认数据源
         else {
-            DataSourceContext.setDB(DataSourceNames.DB1);
+            DynamicDataSource.setDB(DataSourceNames.DB1);
         }
 
         try {
@@ -65,7 +65,7 @@ public class DynamicDataSourceAspect {
             return joinPoint.proceed();
         } finally {
             //清空数据源
-            DataSourceContext.clearDB();
+            DynamicDataSource.clearDB();
         }
     }
 }

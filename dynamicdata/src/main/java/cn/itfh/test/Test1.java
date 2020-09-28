@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /***
@@ -51,5 +52,48 @@ public class Test1 {
         entity.setId(3);
         entity.setPd("3");
         test4Service.insert(entity);
+    }
+
+    @Test
+    public void test4(){
+        List<Test4Entity> list = new ArrayList<>();
+        Test4Entity entity = new Test4Entity();
+        entity.setId(3);
+        entity.setPd("3");
+        Test4Entity entity2 = new Test4Entity();
+        entity2.setId(3);
+        entity2.setPd("3");
+        Test4Entity entity3 = new Test4Entity();
+        entity3.setId(3);
+        entity3.setPd("3");
+        list.add(entity);
+        list.add(entity2);
+        list.add(entity3);
+        test4Service.batchInset(list);
+    }
+
+    @Test
+    public void test5(){
+        List<CronTaskEntity> list = new ArrayList<>();
+        CronTaskEntity newEntity = new CronTaskEntity();
+        newEntity.setClassName("task3");
+        newEntity.setStatus("1");
+        newEntity.setIsUser("1");
+        newEntity.setCorn("0/5 * * * * ?");
+        newEntity.setVersion(1);
+        newEntity.setResult("1");
+
+        CronTaskEntity newEntity2 = new CronTaskEntity();
+        newEntity2.setClassName("task3");
+        newEntity2.setStatus("1");
+        newEntity2.setIsUser("1");
+        newEntity2.setCorn("0/5 * * * * ?");
+        newEntity2.setVersion(1);
+        newEntity2.setResult("1");
+
+        list.add(newEntity);
+        list.add(newEntity2);
+        cronTaskService.addBatsh(list);
+
     }
 }

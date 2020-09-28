@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/crontab/crontab.iml" filepath="$PROJECT_DIR$/crontab/crontab.iml" />
+      <module fileurl="file://$PROJECT_DIR$/dynamicdata/dynamicdata.iml" filepath="$PROJECT_DIR$/dynamicdata/dynamicdata.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/idea_learn_all.iml" filepath="$PROJECT_DIR$/.idea/idea_learn_all.iml" />
     </modules>
   </component>

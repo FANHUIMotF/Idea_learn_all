@@ -8,6 +8,7 @@ import cn.itfh.dynamicdata.datasource.DataSourceNames;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -31,6 +32,12 @@ public class CronTaskServiceImpl implements CronTaskService {
         return cronTaskDao.findAll();
     }
 
-
-
+    @Override
+    @DB(value = DataSourceNames.DB1)
+    @Transactional
+    public void addBatsh(List<CronTaskEntity> list) {
+        list.forEach(entity ->
+                cronTaskDao.add(entity)
+        );
+    }
 }
